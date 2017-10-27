@@ -13,7 +13,7 @@
   "dependenciesComments": {
     "express": "For http requests to interface with influxDB",
     "websocket": "Used to interact with es6-actioncable"
-  }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
