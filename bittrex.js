@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //ActionCable init
 var actionCable = require('es6-actioncable');
 actionCable.consumer = actionCable.default.createConsumer('ws://127.0.0.1:3000/cable', { createWebsocket: (options) => {
@@ -14,6 +15,24 @@ actionCable.consumer = actionCable.default.createConsumer('ws://127.0.0.1:3000/c
 actionCable.subscription = actionCable.consumer.subscriptions.create({channel: "BittrexChannel"});
 
 //Bittrex init
+=======
+//ActionCable init
+var actionCable = require('es6-actioncable');
+actionCable.consumer = actionCable.default.createConsumer('ws://127.0.0.1:3000/cable', { createWebsocket: (options) => {
+  var w3cwebsocket = require('websocket').w3cwebsocket;
+  let webSocket = new w3cwebsocket(
+     'ws://127.0.0.1:3000/cable',
+     options.protocols,
+     'http://127.0.0.1:3000',
+     options.headers,
+     options.extraRequestOptions
+   );
+   return webSocket;
+} });
+actionCable.subscription = actionCable.consumer.subscriptions.create({channel: "BittrexChannel"});
+
+//Bittrex init
+>>>>>>> 4865073f1f0ba598bde8790a533ce0568434745e
 const bittrex = require('node.bittrex.api');
 
 //influxdb init
@@ -97,9 +116,15 @@ bittrex.websockets.subscribe(['BTC-ETH','BTC-SC','BTC-DGB'], function(data, clie
 
 console.log('Connecting to Bittrex websocket...')
 const bittrexWebsocketClient = bittrex.websockets.listen( function( data ) {
+<<<<<<< HEAD
   if (data.M === 'updateSummaryState') {
     data.A.forEach(function(data_for) {
       data_for.Deltas.forEach(function(marketsDelta) {
+=======
+  if (data.M === 'updateSummaryState') {
+    data.A.forEach(function(data_for) {
+      data_for.Deltas.forEach(function(marketsDelta) {
+>>>>>>> 4865073f1f0ba598bde8790a533ce0568434745e
         //console.log("Ticker update: " + JSON.stringify(marketsDelta));
         var response = {
           "platform":"bittrex",
@@ -121,6 +146,7 @@ const bittrexWebsocketClient = bittrex.websockets.listen( function( data ) {
           }
         };
         //console.log("Response: " + JSON.stringify(response));
+<<<<<<< HEAD
 
         //ActionCable broadcast
         actionCable.subscription.send(response);
@@ -141,3 +167,25 @@ const bittrexWebsocketClient = bittrex.websockets.listen( function( data ) {
     });
   }
 });
+=======
+
+        //ActionCable broadcast
+        actionCable.subscription.send(response);
+
+        //Write data to influxDB
+        influx.writePoints([
+          {
+            measurement: 'bittrex',
+            tags: { market_name: marketsDelta.MarketName },
+            fields: { last: marketsDelta.Last,
+                      bid: marketsDelta.Bid,
+                      ask: marketsDelta.Ask },
+          }
+        ]).catch(err => {
+          console.error(`Error saving data to InfluxDB! ${err.stack}`)
+        })
+      });
+    });
+  }
+});
+>>>>>>> 4865073f1f0ba598bde8790a533ce0568434745e
