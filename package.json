@@ -10,6 +10,10 @@
     "es6-actioncable": "^0.5.5",
     "websocket": "^1.0.25"
   },
+  "dependenciesComments": {
+    "express": "For http requests to interface with influxDB",
+    "websocket": "Used to interact with es6-actioncable"
+  }
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
